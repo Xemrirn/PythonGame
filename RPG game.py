@@ -35,7 +35,7 @@ class Game:
     def run_game_loop(self, level_speed):
         is_game_over = False
         did_win = False
-        direction = 0
+        direction = " "
         location = 0
 
         player_character = PlayerCharacter('Sprite/barbarianSprite.png', 375, 700, 45, 100)
@@ -54,20 +54,21 @@ class Game:
         while not is_game_over:
 
             for event in pygame.event.get():
+
                 if event.type == pygame.QUIT:
                     is_game_over = True
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_UP:
-                        direction = 1
+                        direction = "up"
                     elif event.key == pygame.K_DOWN:
-                        direction = -1
+                        direction = "down"
                     elif event.key == pygame.K_RIGHT:
-                        location = 1
+                        direction = "right"
                     elif event.key == pygame.K_LEFT:
-                        location = -1
+                        direction = "right"
                 elif event.type == pygame.KEYUP:
                     if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
-                        direction = 0
+                        direction = " "
 
             self.game_screen.fill(WHITE_COLOR)
             self.game_screen.blit(self.image, (0, 0))
@@ -137,6 +138,11 @@ class PlayerCharacter(GameObject):
         super().__init__(image_path, x, y, width, height)
 
     def move(self, direction, max_height):
+        match(direction):
+            case "up":
+                self.y_pos -= self.SPEED
+
+
         if direction > 0:
             self.y_pos -= self.SPEED
         elif direction < 0:

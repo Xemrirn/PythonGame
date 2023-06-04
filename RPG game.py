@@ -38,18 +38,18 @@ class Game:
         direction = 0
         location = 0
 
-        player_character = PlayerCharacter('Sprite/barbare.png', 375, 700, 45, 100)
+        player_character = PlayerCharacter('Sprite/barbarianSprite.png', 375, 700, 45, 100)
 
-        enemy_0 = EnemyCharacter('Sprite/myslime.png', 20, 550, 65, 50)
+        enemy_0 = EnemyCharacter('Sprite/oldSlime.png', 20, 550, 65, 50)
         enemy_0.SPEED *= level_speed
 
-        enemy_1 = EnemyCharacter('Sprite/myslime.png', self.width - 40, 400, 65, 50)
+        enemy_1 = EnemyCharacter('Sprite/oldSlime.png', self.width - 40, 400, 65, 50)
         enemy_1.SPEED *= level_speed
 
-        enemy_2 = EnemyCharacter('Sprite/myslime.png', 20, 200, 65, 50)
+        enemy_2 = EnemyCharacter('Sprite/oldSlime.png', 20, 200, 65, 50)
         enemy_2.SPEED *= level_speed
 
-        treasure = GameObject('Sprite/mytreasure.png', 350, 50, 75, 75)
+        treasure = GameObject('Sprite/treasure.png', 350, 50, 75, 75)
 
         while not is_game_over:
 
@@ -180,7 +180,7 @@ class EnemyCharacter(GameObject):
 
 pygame.init()
 
-new_game = Game('Sprite/background route.png', SCREEN_TITLE, SCREEN_WIDTH, SCREEN_HEIGHT)
+new_game = Game('Sprite/backgroundPath.png', SCREEN_TITLE, SCREEN_WIDTH, SCREEN_HEIGHT)
 new_game.run_game_loop(1)
 
 pygame.quit()

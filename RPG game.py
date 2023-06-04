@@ -36,7 +36,6 @@ class Game:
         is_game_over = False
         did_win = False
         direction = " "
-        location = 0
 
         player_character = PlayerCharacter('Sprite/barbarianSprite.png', 375, 700, 45, 100)
 
@@ -138,20 +137,16 @@ class PlayerCharacter(GameObject):
         super().__init__(image_path, x, y, width, height)
 
     def move(self, direction, max_height):
-        match(direction):
+        match direction:
             case "up":
                 self.y_pos -= self.SPEED
-
-
-        if direction > 0:
-            self.y_pos -= self.SPEED
-        elif direction < 0:
-            self.y_pos += self.SPEED
-
-        if location > 0:
-            self.x_pos -= self.SPEED
-        elif location < 0:
-            self.x_pos += self.SPEED
+            case "down":
+                self.y_pos += self.SPEED
+            case "right":
+                self.x_pos += self.SPEED
+            case "left":
+                self.x_pos -= self.SPEED
+            case _: pass
 
         if self.y_pos >= max_height - 160:
             self.y_pos = max_height - 160

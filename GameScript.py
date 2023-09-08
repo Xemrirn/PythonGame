@@ -8,6 +8,8 @@ WHITE_COLOR = (255, 255, 255)
 BLACK_COLOR = (0, 0, 0)
 RED_COLOR = (255, 0, 0)
 
+ENEMIES = []
+
 clock = pygame.time.Clock()
 pygame.font.init()
 
@@ -39,21 +41,11 @@ class Game:
 
         player_character = PlayerCharacter('Sprite/barbarianSprite.png', 375, 700, 45, 100)
 
-        enemy_0 = EnemyCharacter('Sprite/oldSlime.png', 20, 550, 65, 50)
-        enemy_0.SPEED *= level_speed
-
-        enemy_1 = EnemyCharacter('Sprite/oldSlime.png', self.width - 40, 400, 65, 50)
-        enemy_1.SPEED *= level_speed
-
-        enemy_2 = EnemyCharacter('Sprite/oldSlime.png', 20, 200, 65, 50)
-        enemy_2.SPEED *= level_speed
-
         treasure = GameObject('Sprite/treasure.png', 350, 50, 75, 75)
 
         while not is_game_over:
 
             for event in pygame.event.get():
-
                 if event.type == pygame.QUIT:
                     is_game_over = True
                 elif event.type == pygame.KEYDOWN:
@@ -64,12 +56,11 @@ class Game:
                     elif event.key == pygame.K_RIGHT:
                         direction = "right"
                     elif event.key == pygame.K_LEFT:
-                        direction = "right"
+                        direction = "left"
                 elif event.type == pygame.KEYUP:
-                    if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
+                    if event.key == pygame.K_UP or event.key == pygame.K_DOWN or event.key == pygame.K_RIGHT or event.key == pygame.K_LEFT:
                         direction = " "
 
-            self.game_screen.fill(WHITE_COLOR)
             self.game_screen.blit(self.image, (0, 0))
 
             treasure.draw(self.game_screen)
@@ -78,41 +69,51 @@ class Game:
             player_character.move(location, self.width)
             player_character.draw(self.game_screen)
 
-            enemy_0.move(self.width)
-            enemy_0.draw(self.game_screen)
+            enemies = draw_enemies(ENEMIES, level_speed)
 
-            if level_speed > 1:
-                enemy_1.move(self.width)
-                enemy_1.draw(self.game_screen)
-            if level_speed > 3:
-                enemy_2.move(self.width)
-                enemy_2.draw(self.game_screen)
+            for each_enemy in enemies:
+                each_enemy.move(SCREEN_WIDTH)
+                each_enemy.draw(new_game.game_screen)
 
-            if player_character.detect_collision(enemy_0):
-                is_game_over = True
-                did_win = False
-                text_lose = font.render('Don\'t give up just yet !', True, RED_COLOR)
-                self.game_screen.blit(text_lose, (200, 200))
-                pygame.display.update()
-                clock.tick(1)
-                break
-            elif player_character.detect_collision(treasure):
-                is_game_over = True
-                did_win = True
-                text_win = font.render('You win well play !', True, RED_COLOR)
-                self.game_screen.blit(text_win, (200, 200))
-                pygame.display.update()
-                clock.tick(1)
-                break
-
+                if player_character.detect_collision(each_enemy):
+                    is_game_over = True
+                    did_win = False
+                    text_lose = font.render('Don\'t give up just yet !', True, RED_COLOR)
+                    self.game_screen.blit(text_lose, (200, 200))
+                    pygame.display.update()
+                    clock.tick(1)
+                    break
+                elif player_character.detect_collision(treasure):
+                    is_game_over = True
+                    did_win = True
+                    text_win = font.render('You win well play !', True, RED_COLOR)
+                    self.game_screen.blit(text_win, (200, 200))
+                    pygame.display.update()
+                    clock.tick(1)
+                    break
             pygame.display.update()
 
             clock.tick(self.TICK_RATE)
 
         if did_win:
             self.run_game_loop(level_speed + 0.5)
-        else:
-            return
+        return
+
+
+def draw_enemies(enemies, level_speed):
+    if len(enemies) == 0:
+        enemies.append(EnemyCharacter('Sprite/oldSlime.png', 20, 550, 65, 50))
+        enemies[0].SPEED *= level_speed
+    match level_speed:
+        case 2:
+            if len(enemies) < 2:
+                enemies.append(EnemyCharacter('Sprite/oldSlime.png', 20, 400, 65, 50))
+        case 3:
+            if len(enemies) < 3:
+                enemies.append(EnemyCharacter('Sprite/oldSlime.png', 20, 250, 65, 50))
+        case _:
+            pass
+    return enemies
 
 
 class GameObject:
@@ -146,8 +147,8 @@ class PlayerCharacter(GameObject):
                 self.x_pos += self.SPEED
             case "left":
                 self.x_pos -= self.SPEED
-            case _: pass
-
+            case _:
+                pass
         if self.y_pos >= max_height - 160:
             self.y_pos = max_height - 160
 
@@ -166,7 +167,7 @@ class PlayerCharacter(GameObject):
 
 
 class EnemyCharacter(GameObject):
-    SPEED = 7
+    SPEED = 5
 
     def __init__(self, image_path, x, y, width, height):
         super().__init__(image_path, x, y, width, height)

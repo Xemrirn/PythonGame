@@ -1,8 +1,11 @@
 import pygame
+import os
+
+cwd = os.getcwd()
 
 SCREEN_TITLE = 'RPG'
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 800
+SCREEN_WIDTH = 1000
+SCREEN_HEIGHT = 600
 
 WHITE_COLOR = (255, 255, 255)
 BLACK_COLOR = (0, 0, 0)
@@ -16,6 +19,9 @@ pygame.font.init()
 font = pygame.font.SysFont('AlexBrush', 50)
 location = 0
 score = 0
+
+slime_path = cwd + '/Sprite/NewSprites/slime.png'
+hero_path = cwd + 'Sprite/NewSprites/BarbarianRunning.png'
 
 
 class Game:
@@ -39,9 +45,9 @@ class Game:
         did_win = False
         direction = " "
 
-        player_character = PlayerCharacter('Sprite/barbarianSprite.png', 375, 700, 45, 100)
+        player_character = PlayerCharacter('Sprite/NewSprites/BarbarianRunning.png', 10, 700, 48 * 1.5, 48 * 1.5)
 
-        treasure = GameObject('Sprite/treasure.png', 350, 50, 75, 75)
+        treasure = GameObject('Sprite/treasure.png', 900, 450, 75, 75)
 
         while not is_game_over:
 
@@ -49,16 +55,17 @@ class Game:
                 if event.type == pygame.QUIT:
                     is_game_over = True
                 elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_UP:
-                        direction = "up"
-                    elif event.key == pygame.K_DOWN:
-                        direction = "down"
-                    elif event.key == pygame.K_RIGHT:
+                    # if event.key == pygame.K_UP:
+                    #    direction = "up"
+                    # elif event.key == pygame.K_DOWN:
+                    #    direction = "down"
+                    if event.key == pygame.K_RIGHT:
                         direction = "right"
                     elif event.key == pygame.K_LEFT:
                         direction = "left"
                 elif event.type == pygame.KEYUP:
-                    if event.key == pygame.K_UP or event.key == pygame.K_DOWN or event.key == pygame.K_RIGHT or event.key == pygame.K_LEFT:
+                    if (event.key == pygame.K_UP or event.key == pygame.K_DOWN or event.key == pygame.K_RIGHT
+                            or event.key == pygame.K_LEFT):
                         direction = " "
 
             self.game_screen.blit(self.image, (0, 0))
@@ -72,7 +79,7 @@ class Game:
             enemies = draw_enemies(ENEMIES, level_speed)
 
             for each_enemy in enemies:
-                each_enemy.move(SCREEN_WIDTH)
+                each_enemy.move(SCREEN_HEIGHT)
                 each_enemy.draw(new_game.game_screen)
 
                 if player_character.detect_collision(each_enemy):
@@ -102,15 +109,15 @@ class Game:
 
 def draw_enemies(enemies, level_speed):
     if len(enemies) == 0:
-        enemies.append(EnemyCharacter('Sprite/oldSlime.png', 20, 550, 65, 50))
+        enemies.append(EnemyCharacter(slime_path, 200, 400, 65, 50))
         enemies[0].SPEED *= level_speed
     match level_speed:
         case 2:
             if len(enemies) < 2:
-                enemies.append(EnemyCharacter('Sprite/oldSlime.png', 20, 400, 65, 50))
+                enemies.append(EnemyCharacter(slime_path, 500, 400, 65, 50))
         case 3:
             if len(enemies) < 3:
-                enemies.append(EnemyCharacter('Sprite/oldSlime.png', 20, 250, 65, 50))
+                enemies.append(EnemyCharacter(slime_path, 800, 400, 65, 50))
         case _:
             pass
     return enemies
@@ -162,7 +169,6 @@ class PlayerCharacter(GameObject):
             return False
         elif self.x_pos + self.width < other_entities.x_pos:
             return False
-
         return True
 
 
@@ -172,12 +178,12 @@ class EnemyCharacter(GameObject):
     def __init__(self, image_path, x, y, width, height):
         super().__init__(image_path, x, y, width, height)
 
-    def move(self, max_width):
-        if self.x_pos <= 20:
+    def move(self, max_height):
+        if self.y_pos <= max_height - 350:
             self.SPEED = abs(self.SPEED)
-        elif self.x_pos >= max_width - 40:
+        elif self.y_pos >= max_height - 50:
             self.SPEED = -abs(self.SPEED)
-        self.x_pos += self.SPEED
+        self.y_pos += self.SPEED
 
 
 pygame.init()

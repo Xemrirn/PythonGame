@@ -4,8 +4,8 @@ import os
 cwd = os.getcwd()
 
 SCREEN_TITLE = 'RPG'
-SCREEN_WIDTH = 1000
-SCREEN_HEIGHT = 600
+SCREEN_WIDTH = 1800
+SCREEN_HEIGHT = 900
 
 WHITE_COLOR = (255, 255, 255)
 BLACK_COLOR = (0, 0, 0)
@@ -85,16 +85,16 @@ class Game:
                 if player_character.detect_collision(each_enemy):
                     is_game_over = True
                     did_win = False
-                    text_lose = font.render('Don\'t give up just yet !', True, RED_COLOR)
-                    self.game_screen.blit(text_lose, (200, 200))
+                    text_lose = font.render("Major Skill Issue", True, RED_COLOR)
+                    self.game_screen.blit(text_lose, (SCREEN_WIDTH / 2 - text_lose.get_width() / 2, SCREEN_HEIGHT / 2))
                     pygame.display.update()
                     clock.tick(1)
                     break
                 elif player_character.detect_collision(treasure):
                     is_game_over = True
                     did_win = True
-                    text_win = font.render('You win well play !', True, RED_COLOR)
-                    self.game_screen.blit(text_win, (200, 200))
+                    text_win = font.render("huh", True, RED_COLOR)
+                    self.game_screen.blit(text_win, (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
                     pygame.display.update()
                     clock.tick(1)
                     break

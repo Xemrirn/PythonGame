@@ -3,7 +3,7 @@ import os
 
 cwd = os.getcwd()
 
-SCREEN_TITLE = 'RPG'
+SCREEN_TITLE = 'Game'
 SCREEN_WIDTH = 1800
 SCREEN_HEIGHT = 900
 
